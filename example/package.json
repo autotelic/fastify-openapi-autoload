@@ -1,0 +1,13 @@
+{
+  "name": "fastify-openapi-autoload-example",
+  "description": "An example to configure fastify-openapi-autoload",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "fastify start index.js -l info -w"
+  },
+  "dependencies": {
+    "fastify": "^4.25.2",
+    "fastify-cli": "^6.0.0"
+  }
+}
