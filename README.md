@@ -33,10 +33,25 @@ export default async function app (fastify, opts) {
       specification: '/path/to/openapi/spec.yaml'
     }
   })
-
-  //...
 }
 
+```
+
+### Running the Example
+
+Start the example server:
+
+```sh
+cd ./example
+npm i && npm start
+```
+
+To confirm the spec provided in the example is processed, make the follow requests:
+
+```sh
+http GET :3000/foo
+http GET :3000/bar
+http POST :3000/baz
 ```
 
 ## API
