@@ -1,7 +1,8 @@
 import { existsSync } from 'fs'
-import fastifyPlugin from 'fastify-plugin'
-import openapiGlue from 'fastify-openapi-glue'
+
 import { fastifyAutoload } from '@fastify/autoload'
+import openapiGlue from 'fastify-openapi-glue'
+import fastifyPlugin from 'fastify-plugin'
 
 /**
  * A Fastify plugin to integrate fastify-openapi-glue and autoload route handlers.
@@ -11,8 +12,8 @@ import { fastifyAutoload } from '@fastify/autoload'
  * @param {string} options.openapi - OpenAPI Glue opts - must include `specification`.
  */
 async function openapiAutoload (fastify, options = {}) {
-  const { handlersDir, openapi = {} } = options
-  const { specification, operationResolver = null } = openapi
+  const { handlersDir, openapiOpts = {} } = options
+  const { specification, operationResolver = null } = openapiOpts
 
   // Validate handlers directory
   if (!handlersDir || !existsSync(handlersDir)) {
@@ -37,7 +38,7 @@ async function openapiAutoload (fastify, options = {}) {
     fastify.register(openapiGlue, {
       specification,
       operationResolver: operationResolver || makeOperationResolver(fastify),
-      ...openapi
+      ...openapiOpts
     })
   } catch (error) {
     const errorMessage = `fastify-openapi-autoload: Error registering plugins - ${error.message}`
@@ -51,11 +52,9 @@ async function openapiAutoload (fastify, options = {}) {
  * @param {Object} fastify - The Fastify instance.
  * @returns {Function} The operation resolver function.
  */
-const makeOperationResolver = (fastify) => {
-  return (operationId, method, openapiPath) => {
-    fastify.log.info(`fastify-openapi-autoload - has '${operationId}' decorator: ${fastify.hasDecorator(operationId)}`)
-    return fastify[operationId]
-  }
+const makeOperationResolver = (fastify) => (operationId) => {
+  fastify.log.info(`fastify-openapi-autoload - has '${operationId}' decorator: ${fastify.hasDecorator(operationId)}`)
+  return fastify[operationId]
 }
 
 const fastifyOpenapiAutoload = fastifyPlugin(openapiAutoload, {

@@ -1,7 +1,8 @@
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import Fastify from 'fastify'
+
 import fastifyInjector from '@autotelic/fastify-injector'
+import Fastify from 'fastify'
 import { test } from 'tap'
 
 import openapiAutoload from '../plugin.js'
@@ -17,7 +18,7 @@ test('fastify-openapi-autoload plugin should exist', async ({ ok }) => {
 
   app.register(openapiAutoload, {
     handlersDir,
-    openapi: { specification }
+    openapiOpts: { specification }
   })
   await app.ready()
 
@@ -30,7 +31,7 @@ test('fastify-openapi-autoload should make operation resolvers', async ({ ok }) 
 
   app.register(openapiAutoload, {
     handlersDir,
-    openapi: { specification }
+    openapiOpts: { specification }
   })
   await app.ready()
 
@@ -44,7 +45,7 @@ test('fastify-openapi-autoload should register routes', async ({ equal }) => {
 
   app.register(openapiAutoload, {
     handlersDir,
-    openapi: { specification }
+    openapiOpts: { specification }
   })
   await app.ready()
 
@@ -64,13 +65,11 @@ test('fastify-openapi-autoload will use a custom operation resolver if provided'
 
   app.register(openapiAutoload, {
     handlersDir,
-    openapi: {
+    openapiOpts: {
       specification,
-      operationResolver: (fastify) => {
-        return (operationId, method, openapiPath) => {
-          fastify.log.info('custom resolver')
-          return fastify[operationId]
-        }
+      operationResolver: (fastify) => (operationId) => {
+        fastify.log.info('custom resolver')
+        return fastify[operationId]
       }
     }
   })
@@ -85,7 +84,7 @@ test('fastify-openapi-autoload should throw an error if the `dir` param is missi
   const app = Fastify()
 
   app.register(openapiAutoload, {
-    openapi: { specification }
+    openapiOpts: { specification }
   })
   const appError = new Error('fastify-openapi-autoload: Missing or invalid `handlersDir`. Please specify a valid directory where your handlers are located.')
   await rejects(app.ready(), appError)
@@ -96,7 +95,7 @@ test('fastify-openapi-autoload should throw an error if the `dir` path is invali
 
   app.register(openapiAutoload, {
     handlersDir: join(fixturesDir, 'invalidPath'),
-    openapi: { specification }
+    openapiOpts: { specification }
   })
   const appError = new Error('fastify-openapi-autoload: Missing or invalid `handlersDir`. Please specify a valid directory where your handlers are located.')
   await rejects(app.ready(), appError)
@@ -117,7 +116,7 @@ test('fastify-openapi-autoload should throw an error if the `spec` path is inval
 
   app.register(openapiAutoload, {
     handlersDir,
-    openapi: { specification: 'invalidPath' }
+    openapiOpts: { specification: 'invalidPath' }
   })
   const appError = new Error('fastify-openapi-autoload: Missing or invalid `openapi.specification`. Please provide a valid OpenAPI specification file.')
   await rejects(app.ready(), appError)
@@ -130,7 +129,7 @@ test('fastify-openapi-autoload plugin error handling', async ({ equal, rejects }
 
   app.register(openapiAutoload, {
     handlersDir,
-    openapi: { specification }
+    openapiOpts: { specification }
   })
 
   app.log.error = (msg) => {

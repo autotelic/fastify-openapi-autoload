@@ -3,17 +3,17 @@
   "version": "0.0.0",
   "description": "Plugin for fastify",
   "main": "plugin.js",
-  "types": "plugin.d.ts",
+  "types": "types/plugin.d.ts",
   "type": "module",
-  "directories": {
-    "test": "test"
-  },
+  "files": [
+    "plugin.js",
+    "types/plugin.d.ts"
+  ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
-    "lint": "standard --verbose",
-    "fix": "standard --fix",
+    "lint": "eslint .",
     "test": "npm run lint && npm run unit && npm run test:types",
     "test:types": "tsd",
     "unit": "tap run ./test/plugin.test.js"
@@ -33,9 +33,13 @@
     "fastify-plugin": "^4.5.1"
   },
   "devDependencies": {
+    "@autotelic/eslint-config-js": "^0.2.1",
     "@autotelic/fastify-injector": "^0.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "eslint": "^8.56.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
     "fastify": "^4.25.2",
-    "standard": "^17.1.0",
     "tap": "^18.6.1",
     "tsd": "^0.30.3",
     "typescript": "^5.3.3"
@@ -45,13 +49,6 @@
     "fastify-openapi-glue": "4.4.2"
   },
   "tsd": {
-    "directory": "test/types"
-  },
-  "standard": {
-    "ignore": [
-      "**/*.ts"
-    ]
+    "directory": "types"
   }
 }
-
-
