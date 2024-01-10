@@ -9,7 +9,7 @@ import fastifyPlugin from 'fastify-plugin'
  * @param {Object} fastify - The Fastify instance.
  * @param {Object} options - Configuration options for the plugin.
  * @param {string} options.handlersDir - Directory path for route handlers.
- * @param {string} options.openapi - OpenAPI Glue opts - must include `specification`.
+ * @param {string} options.openapiOpts - OpenAPI Glue opts - must include `specification`.
  */
 async function openapiAutoload (fastify, options = {}) {
   const { handlersDir, openapiOpts = {} } = options
@@ -26,8 +26,12 @@ async function openapiAutoload (fastify, options = {}) {
   }
 
   try {
+    // Register JWT verify
+
+    // Decorate request with authenticate
+
     // Register fastifyAutoload for handlers
-    await fastify.register(fastifyAutoload, {
+    fastify.register(fastifyAutoload, {
       dir: handlersDir,
       maxDepth: 1,
       dirNameRoutePrefix: false,
@@ -38,6 +42,7 @@ async function openapiAutoload (fastify, options = {}) {
     fastify.register(openapiGlue, {
       specification,
       operationResolver: operationResolver || makeOperationResolver(fastify),
+      // securityHandlers: makeSecurityHandlers(fastify),
       ...openapiOpts
     })
   } catch (error) {
@@ -56,6 +61,8 @@ const makeOperationResolver = (fastify) => (operationId) => {
   fastify.log.info(`fastify-openapi-autoload - has '${operationId}' decorator: ${fastify.hasDecorator(operationId)}`)
   return fastify[operationId]
 }
+
+// const makeSecurityHandlers = () => {}
 
 const fastifyOpenapiAutoload = fastifyPlugin(openapiAutoload, {
   name: 'fastify-openapi-autoload'

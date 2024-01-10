@@ -1,6 +1,4 @@
-/// <reference types="node" />
-
-import type { FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginCallback } from 'fastify'
 import type { FastifyOpenapiGlueOptions } from 'fastify-openapi-glue'
 
 export interface OpenapiAutoloadOptions {
@@ -8,7 +6,7 @@ export interface OpenapiAutoloadOptions {
   openapiOpts: FastifyOpenapiGlueOptions
 }
 
-declare const fastifyOpenapiAutoload: FastifyPluginAsync<OpenapiAutoloadOptions>
+declare const fastifyOpenapiAutoload: FastifyPluginCallback<OpenapiAutoloadOptions>
 
 export default fastifyOpenapiAutoload
 export { fastifyOpenapiAutoload }

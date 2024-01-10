@@ -5,7 +5,7 @@ import fastifyInjector from '@autotelic/fastify-injector'
 import Fastify from 'fastify'
 import { test } from 'tap'
 
-import openapiAutoload from '../plugin.js'
+import openapiAutoload from '../index.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const fixturesDir = join(__dirname, 'fixtures')
