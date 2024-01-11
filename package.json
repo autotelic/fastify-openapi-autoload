@@ -7,7 +7,10 @@
   "type": "module",
   "files": [
     "index.js",
-    "types/index.d.ts"
+    "types/index.d.ts",
+    "jwtJwks.js",
+    "lib/jwtJwks.js",
+    "types/jwtJwks.d.ts"
   ],
   "engines": {
     "node": ">=18"
@@ -41,10 +44,17 @@
     "@typescript-eslint/parser": "^6.18.1",
     "eslint": "^8.56.0",
     "eslint-import-resolver-typescript": "^3.6.1",
+    "fast-jwt": "^3.3.2",
     "fastify": "^4.25.2",
+    "jose": "^5.2.0",
+    "nock": "^13.5.0",
     "tap": "^18.6.1",
     "tsd": "^0.30.3",
     "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@fastify/jwt": "^8.0.0",
+    "get-jwks": "^9.0.0"
   },
   "tsd": {
     "directory": "types"

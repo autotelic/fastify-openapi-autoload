@@ -43,36 +43,40 @@ test('Should throw an error if the `handlersDir` param is missing', async ({ rej
 
   const appError = new Error('fastify-openapi-autoload: Missing or invalid `handlersDir`. Please specify a valid directory where your handlers are located.')
 
-  await rejects(fastify.ready(), appError)
+  rejects(fastify.ready(), appError)
 })
 
-test('Should throw an error if the `handlersDir` path is invalid', async ({ rejects }) => {
+test('Should throw an error if the `handlersDir` path is invalid', async ({ rejects, teardown }) => {
+  teardown(async () => fastify.close())
   const fastify = buildApp({ handlersDir: join(fixturesDir, 'invalidPath') })
 
   const appError = new Error('fastify-openapi-autoload: Missing or invalid `handlersDir`. Please specify a valid directory where your handlers are located.')
-  await rejects(fastify.ready(), appError)
+  rejects(fastify.ready(), appError)
 })
 
-test('Should throw an error if the `specification` param is missing', async ({ rejects }) => {
+test('Should throw an error if the `specification` param is missing', async ({ rejects, teardown }) => {
+  teardown(async () => fastify.close())
   const fastify = buildApp({ hasSpec: false })
 
   const appError = new Error('fastify-openapi-autoload: Missing or invalid `openapi.specification`. Please provide a valid OpenAPI specification file.')
-  await rejects(fastify.ready(), appError)
+  rejects(fastify.ready(), appError)
 })
 
-test('Should throw an error if the `specification` path is invalid', async ({ rejects }) => {
+test('Should throw an error if the `specification` path is invalid', async ({ rejects, teardown }) => {
+  teardown(async () => fastify.close())
   const fastify = buildApp({ specification: 'invalidPath' })
 
   const appError = new Error('fastify-openapi-autoload: Missing or invalid `openapi.specification`. Please provide a valid OpenAPI specification file.')
-  await rejects(fastify.ready(), appError)
+  rejects(fastify.ready(), appError)
 })
 
-test('Plugin error handling', async ({ equal, rejects }) => {
+test('Plugin error handling', async ({ equal, rejects, teardown }) => {
+  teardown(async () => fastify.close())
   const fastify = buildApp({ hasPluginError: true })
 
   fastify.log.error = (msg) => {
     equal(msg, 'fastify-openapi-autoload: Error registering plugins - fastify-plugin expects a function, instead got a \'object\'')
   }
 
-  await rejects(fastify.ready(), new Error('fastify-openapi-autoload: Error registering plugins - fastify-plugin expects a function, instead got a \'object\''))
+  rejects(fastify.ready(), new Error('fastify-openapi-autoload: Error registering plugins - fastify-plugin expects a function, instead got a \'object\''))
 })

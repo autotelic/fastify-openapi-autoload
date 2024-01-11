@@ -1,0 +1,16 @@
+{
+  "name": "fastify-openapi-autoload-example",
+  "description": "An example to configure @autotelic/fastify-openapi-autoload with jwt/jwks",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "fastify start -w -l info -P -o index.js"
+  },
+  "dependencies": {
+    "fast-jwt": "^3.3.2",
+    "fastify": "^4.25.2",
+    "fastify-cli": "^6.0.0",
+    "fastify-plugin": "^4.5.1",
+    "jose": "^5.2.0"
+  }
+}

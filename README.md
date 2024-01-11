@@ -38,22 +38,7 @@ export default async function app (fastify, options) {
 }
 ```
 
-### Running the Example
-
-Start the example server:
-
-```sh
-cd ./example
-npm i && npm start
-```
-
-To confirm the spec provided in the example is processed, make the following requests:
-
-```sh
-http GET :3000/foo
-http GET :3000/bar
-http POST :3000/baz
-```
+To run an example app, see [this guide](./example/README.md)
 
 ## API Reference - Options
 
@@ -91,7 +76,9 @@ OpenAPI-related options. Refer to [fastify-openapi-glue documentation](https://g
 
 By default, the `fastify-openapi-autoload` provides a standard resolver that locates a handler based on the operation ID, looking for a matching decorator method in the Fastify instance. However, if your application requires a different mapping strategy or additional logic for resolving operations, you can provide a custom resolver function.
 
-The custom resolver function should be a factory function that accepts the Fastify instance as an argument and returns another function. This returned function should be the operation resolver. See the [`fastify-openapi-glue operation resolver docs`](https://github.com/seriousme/fastify-openapi-glue/blob/master/docs/operationResolver.md).
+The custom resolver should be a factory function that receives the Fastify instance as an argument and returns an operation resolver function. This resolver function, when invoked with an `operationId`, should return the corresponding handler function for that specific operation.
+
+For more information on the operation resolver, refer to the [`fastify-openapi-glue operation resolver documentation`](https://github.com/seriousme/fastify-openapi-glue/blob/master/docs/operationResolver.md).
 
  ```js
 // example
@@ -108,6 +95,92 @@ export default async function app (fastify, options) {
   })
 }
  ```
+
+### `makeSecurityHandlers` (optional)
+
+If your application requires custom security handlers for your OpenAPI handlers, you can provide a factory function similar to the `makeOperationResolver` option.
+
+This factory function should take the Fastify instance as an argument and return an object containing the security handlers. Each handler within this object should implement the logic for handling security aspects as defined in your OpenAPI specification.
+
+For guidance on implementing security handlers, see the [`fastify-openapi-glue security handlers documentation`](https://github.com/seriousme/fastify-openapi-glue/blob/master/docs/securityHandlers.md).
+
+Example usage:
+
+```js
+// example
+export default async function app (fastify, options) {
+  fastify.register(openapiAutoload, {
+    makeSecurityHandlers: (fastify) => {
+      // Custom logic for security handlers
+      return {
+        someSecurityHandler: (notOk) => {
+          if (notOk) {
+            throw new Error('not ok')
+          }
+        }
+      }
+    },
+    // Other configuration options...
+  })
+}
+```
+
+## JSON Web Token Security Handler
+
+The `jwtJwksHandler` function, exported with the `fastify-openapi-autoload` plugin, allows you to integrate JWT/JWKS authentication as security handlers.
+
+To use this function, you need to install the following dependencies:
+
+```sh
+npm i @autotelic/fastify-openapi-autoload @fastify/jwt get-jwks
+```
+
+### Options
+
+When configuring `jwtJwksHandler`, you can customize its behavior with the following options:
+
+- `jwksOpts` (optional): See [`get-jwks` documentation](https://github.com/nearform/get-jwks) for details.
+- `issuer` (*required): The issuer URL of the JWT tokens. This is typically the base URL of the token provider. Required option if `jwksOpts.issuersWhitelist` & `jwksOpts.checkIssuer` options are not provided.
+- `authRequestDecorator` (optional - default provided): A function to decorate the Fastify request with custom JWT authentication logic.
+- `securityHandlers` (optional - default provided): An object containing Fastify security handlers.
+
+### Example Usage
+
+```js
+import fastify from 'fastify'
+import openapiAutoload from '@autotelic/fastify-openapi-autoload'
+import { jwtJwksHandler } from '@autotelic/fastify-openapi-autoload/jwtJwks'
+
+export default async function app (fastify, options) {
+  const makeSecurityHandlers = jwtJwksHandler({
+    issuer: 'https://your-issuer-url.com',
+    jwksOpts: {
+      max: 100,
+      ttl: 60000,
+      timeout: 5000
+      // ...additional JWKS options
+    },
+    // Custom authentication request decorator (optional)
+    authRequestDecorator: async (request) => {
+      try {
+        const decodedToken = await request.jwtVerify(request)
+        const { userId } = decodedToken
+        return userId
+      } catch (err) {
+        return null
+      }
+    }
+  })
+
+  fastify.register(openapiAutoload, {
+    handlersDir: '/path/to/handlers',
+    openapiOpts: {
+      specification: '/path/to/openapi/spec.yaml'
+    },
+    makeSecurityHandlers
+  })
+}
+```
 
 ## Plugin Development: Triggering a Release
 

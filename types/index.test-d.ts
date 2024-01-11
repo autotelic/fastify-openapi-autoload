@@ -44,10 +44,19 @@ const opt4 = {
   makeOperationResolver: () => (operationId: string) => async () => operationId
 }
 
+const opt5 = {
+  handlersDir: '/path/to/handlers',
+  openapiOpts: {
+    specification: '/path/to/openapi/spec.yaml'
+  },
+  makeSecurityHandlers: () => ({ bearerAuth: [] })
+}
+
 expectAssignable<FastifyInstance>(fastify().register(fastifyOpenapiAutoload, opt1))
 expectAssignable<FastifyInstance>(fastify().register(fastifyOpenapiAutoload, opt2))
 expectAssignable<FastifyInstance>(fastify().register(fastifyOpenapiAutoload, opt3))
 expectAssignable<FastifyInstance>(fastify().register(fastifyOpenapiAutoload, opt4))
+expectAssignable<FastifyInstance>(fastify().register(fastifyOpenapiAutoload, opt5))
 
 const errOpt1 = {}
 
@@ -60,6 +69,24 @@ const errOpt3 = {
   openapiOpts: {}
 }
 
+const errOpt4 = {
+  handlersDir: '/path/to/handlers',
+  openapiOpts: {
+    specification: '/path/to/openapi/spec.yaml'
+  },
+  makeOperationResolver: {}
+}
+
+const errOpt5 = {
+  handlersDir: '/path/to/handlers',
+  openapiOpts: {
+    specification: '/path/to/openapi/spec.yaml'
+  },
+  makeSecurityHandlers: {}
+}
+
 expectError(fastify().register(fastifyOpenapiAutoload, errOpt1))
 expectError(fastify().register(fastifyOpenapiAutoload, errOpt2))
 expectError(fastify().register(fastifyOpenapiAutoload, errOpt3))
+expectError(fastify().register(fastifyOpenapiAutoload, errOpt4))
+expectError(fastify().register(fastifyOpenapiAutoload, errOpt5))
