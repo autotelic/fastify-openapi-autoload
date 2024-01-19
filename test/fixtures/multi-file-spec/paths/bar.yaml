@@ -1,0 +1,12 @@
+get:
+  summary: test GET route /bar
+  operationId: getBar
+  tags:
+    - bar
+  responses:
+    '204':
+      description: test GET route /bar
+      content:
+        application/json:
+          schema:
+            type: string

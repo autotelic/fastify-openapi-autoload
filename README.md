@@ -56,9 +56,13 @@ Path to the route handlers directory.
 }
  ```
 
-### `openapiOpts` (required)
+### `openapiOpts`
 
 OpenAPI-related options. Refer to [fastify-openapi-glue documentation](https://github.com/seriousme/fastify-openapi-glue?tab=readme-ov-file#options) for more details. At minimum, `specification` must be defined. This can be a JSON object, or the path to a JSON or YAML file containing a valid OpenApi(v2/v3) file.
+
+#### `openapiOpts.specification` (required)
+
+Most openapiOpts are optional, however `specification` must be defined. This can be a JSON object, or the path to a JSON or YAML file containing a valid OpenApi(v2/v3) file.
 
  ```js
 // example
@@ -71,6 +75,26 @@ OpenAPI-related options. Refer to [fastify-openapi-glue documentation](https://g
   })
 }
  ```
+
+#### `openapiOpts.resolveMultiSpec` (optional)
+
+The `resolveMultiSpec`` option enables handling of multiple YAML specification files for OpenAPI. When set to true, it allows the plugin to combine multiple YAML files into a single OpenAPI specification.
+
+The plugin achieves this by loading the root specification file and then resolving all external references ($ref) found within it. These references should be relative paths to other YAML files that form part of the complete OpenAPI specification.
+
+```js
+// example
+export default async function app(fastify, opts) {
+  fastify.register(openapiAutoload, {
+    openapiOpts: {
+      specification: '/path/to/spec/openapi.yaml',
+      resolveMultiSpec: true
+    },
+    // Other configuration options...
+  })
+}
+
+```
 
 ### `makeOperationResolver` (optional)
 

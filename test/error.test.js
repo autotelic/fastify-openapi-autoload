@@ -58,7 +58,7 @@ test('Should throw an error if the `specification` param is missing', async ({ r
   teardown(async () => fastify.close())
   const fastify = buildApp({ hasSpec: false })
 
-  const appError = new Error('fastify-openapi-autoload: Missing or invalid `openapi.specification`. Please provide a valid OpenAPI specification file.')
+  const appError = new Error('fastify-openapi-autoload: Missing or invalid `openapi.specification`. Please provide a valid OpenAPI specification.')
   rejects(fastify.ready(), appError)
 })
 
@@ -66,7 +66,7 @@ test('Should throw an error if the `specification` path is invalid', async ({ re
   teardown(async () => fastify.close())
   const fastify = buildApp({ specification: 'invalidPath' })
 
-  const appError = new Error('fastify-openapi-autoload: Missing or invalid `openapi.specification`. Please provide a valid OpenAPI specification file.')
+  const appError = new Error('fastify-openapi-autoload: Missing or invalid `openapi.specification`. Please provide a valid OpenAPI specification.')
   rejects(fastify.ready(), appError)
 })
 

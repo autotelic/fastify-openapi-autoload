@@ -1,0 +1,56 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Test JSON Spec"
+  },
+  "paths": {
+    "/foo": {
+      "get": {
+        "summary": "test GET route /foo",
+        "operationId": "getFoo",
+        "tags": [
+          "foo"
+        ],
+        "responses": {
+          "204": {
+            "description": "test GET route /foo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bar": {
+      "get": {
+        "summary": "test GET route /bar",
+        "operationId": "getBar",
+        "tags": [
+          "bar"
+        ],
+        "responses": {
+          "204": {
+            "description": "test GET route /bar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

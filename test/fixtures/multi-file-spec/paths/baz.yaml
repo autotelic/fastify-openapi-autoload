@@ -1,0 +1,12 @@
+post:
+  summary: test POST route /baz
+  operationId: postBaz
+  tags:
+    - baz
+  responses:
+    '204':
+      description: test POST route /baz
+      content:
+        application/json:
+          schema:
+            type: string
