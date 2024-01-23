@@ -8,10 +8,7 @@ import yamljs from 'yamljs'
 
 async function openapiAutoload (fastify, options = {}) {
   const { handlersDir, openapiOpts = {}, makeSecurityHandlers, makeOperationResolver } = options
-  const {
-    specification,
-    operationResolver = null
-  } = openapiOpts
+  const { specification, operationResolver = null } = openapiOpts
 
   // Validate handlers directory
   if (!handlersDir || !existsSync(handlersDir)) {
@@ -47,7 +44,8 @@ async function openapiAutoload (fastify, options = {}) {
     }
 
     // Resolve multi-file OpenAPI specification
-    if (typeof specification === 'string') {
+    const isYamlSpec = specification.endsWith('.yaml') || specification.endsWith('.yml')
+    if (typeof specification === 'string' && isYamlSpec) {
       const root = yamljs.load(specification)
       const results = await resolveRefs(root, {
         filter: ['relative'],
