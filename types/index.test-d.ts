@@ -12,7 +12,6 @@ const opt1 = {
     }
   }
 }
-expectAssignable<FastifyInstance>(fastify().register(fastifyOpenapiAutoload, opt1))
 
 const opt2 = {
   handlersDir: '/path/to/handlers',
@@ -35,8 +34,20 @@ const opt3 = {
   }
 }
 
+const opt4 = {
+  handlersDir: '/path/to/handlers',
+  openapiOpts: {
+    specification: {
+      openapi: '/path/to/openapi/spec.yaml'
+    }
+  },
+  makeOperationResolver: () => (operationId: string) => async () => operationId
+}
+
+expectAssignable<FastifyInstance>(fastify().register(fastifyOpenapiAutoload, opt1))
 expectAssignable<FastifyInstance>(fastify().register(fastifyOpenapiAutoload, opt2))
 expectAssignable<FastifyInstance>(fastify().register(fastifyOpenapiAutoload, opt3))
+expectAssignable<FastifyInstance>(fastify().register(fastifyOpenapiAutoload, opt4))
 
 const errOpt1 = {}
 

@@ -28,7 +28,7 @@ npm i @autotelic/fastify-openapi-autoload
 import fastify from 'fastify'
 import openapiAutoload from '@autotelic/fastify-openapi-autoload'
 
-export default async function app (fastify, opts) {
+export default async function app (fastify, options) {
   fastify.register(openapiAutoload, {
     handlersDir: '/path/to/handlers',
     openapiOpts: {
@@ -59,48 +59,52 @@ http POST :3000/baz
 
 ### `handlersDir` (required)
 
- Path to the route handlers directory.
+Path to the route handlers directory.
 
  ```js
 // example:
- export default async function app(fastify, options) {
+ export default async function app (fastify, options) {
   fastify.register(openapiAutoload, {
     handlersDir: '/path/to/handlers',
-    //...
+    // Other configuration options...
   })
 }
  ```
 
 ### `openapiOpts` (required)
 
- OpenAPI-related options. Refer to [fastify-openapi-glue documentation](https://github.com/seriousme/fastify-openapi-glue?tab=readme-ov-file#options) for more details.
+OpenAPI-related options. Refer to [fastify-openapi-glue documentation](https://github.com/seriousme/fastify-openapi-glue?tab=readme-ov-file#options) for more details. At minimum, `specification` must be defined. This can be a JSON object, or the path to a JSON or YAML file containing a valid OpenApi(v2/v3) file.
 
  ```js
 // example
- export default async function app(fastify, options) {
+ export default async function app (fastify, options) {
   fastify.register(openapiAutoload, {
     openapiOpts: {
-      specification: '/path/to/openapi/spec.yaml'
+      specification: '/path/to/spec/openapi.yaml'
     },
-    //...
+    // Other configuration options...
   })
 }
  ```
 
-### `jwksOpts` (optional)
+### `makeOperationResolver` (optional)
 
-`@autotelic/fastify-openapi-autoload` comes prepackaged with jwt/jwks security handlers setup for an openAPI spec. When the `jwksOpts.whiteListedIssuer` is provided, [@fastify/jwt](https://github.com/fastify/fastify-jwt) is registered and the request is decorated with an authentication method. You will need to set up a `.well-known/jwks-json` route (see [`get-jwks` docs](https://github.com/nearform/get-jwks?tab=readme-ov-file#getjwk) for more on this) and a bearerAuth security schema in your openAPI spec. See the example app for a basic configuration.
+By default, the `fastify-openapi-autoload` provides a standard resolver that locates a handler based on the operation ID, looking for a matching decorator method in the Fastify instance. However, if your application requires a different mapping strategy or additional logic for resolving operations, you can provide a custom resolver function.
 
-you can pass any [GetJWKS options](https://github.com/nearform/get-jwks?tab=readme-ov-file#options) to the `jwksOpts` object, however, to register the necessary plugins and decorators, the`whiteListedIssuer` option _must_ be provided.
+The custom resolver function should be a factory function that accepts the Fastify instance as an argument and returns another function. This returned function should be the operation resolver. See the [`fastify-openapi-glue operation resolver docs`](https://github.com/seriousme/fastify-openapi-glue/blob/master/docs/operationResolver.md).
 
  ```js
 // example
- export default async function app(fastify, options) {
+export default async function app (fastify, options) {
   fastify.register(openapiAutoload, {
-    jwksOpts: {
-      whiteListedIssuer: 'https://your-domain.com/'
+    makeOperationResolver: (fastify) => (operationId) => {
+      // Custom logic to determine the handler function for the given operationId
+      // For example, returning a fixed response for demonstration:
+      return async (_req, reply) => {
+        reply.code(200).send(`Custom response for operation ${operationId}`)
+      }
     },
-    //...
+    // Other configuration options...
   })
 }
  ```
