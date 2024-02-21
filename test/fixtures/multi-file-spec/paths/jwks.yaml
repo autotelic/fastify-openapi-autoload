@@ -1,0 +1,12 @@
+get:
+  summary: JSON Web Key Set
+  operationId: getJwks
+  tags:
+    - jwks
+  responses:
+    '200':
+      description: An array of JSON Web Key (JWK) objects
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/JWKS"

@@ -3,6 +3,8 @@ import { existsSync } from 'fs'
 import { fastifyAutoload } from '@fastify/autoload'
 import openapiGlue from 'fastify-openapi-glue'
 import fastifyPlugin from 'fastify-plugin'
+import { resolveRefs } from 'json-refs'
+import yamljs from 'yamljs'
 
 async function openapiAutoload (fastify, options = {}) {
   const { handlersDir, openapiOpts = {}, makeSecurityHandlers, makeOperationResolver } = options
@@ -15,7 +17,7 @@ async function openapiAutoload (fastify, options = {}) {
 
   // Validate OpenAPI specification
   if (!specification || !existsSync(specification)) {
-    throw new Error('fastify-openapi-autoload: Missing or invalid `openapi.specification`. Please provide a valid OpenAPI specification file.')
+    throw new Error('fastify-openapi-autoload: Missing or invalid `openapi.specification`. Please provide a valid OpenAPI specification.')
   }
 
   try {
@@ -39,6 +41,22 @@ async function openapiAutoload (fastify, options = {}) {
 
     if (makeOperationResolver) {
       openapiGlueOpts.operationResolver = makeOperationResolver(fastify)
+    }
+
+    // Resolve multi-file OpenAPI specification
+    const isYamlSpec = specification.endsWith('.yaml') || specification.endsWith('.yml')
+    if (typeof specification === 'string' && isYamlSpec) {
+      const root = yamljs.load(specification)
+      const results = await resolveRefs(root, {
+        filter: ['relative'],
+        location: specification,
+        loaderOptions: {
+          processContent (res, callback) {
+            callback(null, yamljs.parse(res.text))
+          }
+        }
+      })
+      openapiGlueOpts.specification = results.resolved
     }
 
     // Register openapiGlue for OpenAPI integration

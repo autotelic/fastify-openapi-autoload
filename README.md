@@ -58,7 +58,7 @@ Path to the route handlers directory.
 
 ### `openapiOpts` (required)
 
-OpenAPI-related options. Refer to [fastify-openapi-glue documentation](https://github.com/seriousme/fastify-openapi-glue?tab=readme-ov-file#options) for more details. At minimum, `specification` must be defined. This can be a JSON object, or the path to a JSON or YAML file containing a valid OpenApi(v2/v3) file.
+OpenAPI-related options. Refer to [fastify-openapi-glue documentation](https://github.com/seriousme/fastify-openapi-glue?tab=readme-ov-file#options) for more details. At minimum, `specification` must be defined. This can be a JSON object, or the path to a JSON or YAML file containing a valid OpenApi(v2/v3) file. If `specification` is a path to a yaml file, `fastify-openapi-autoload` supports multi-file resolving. See [this test directory](./test/fixtures/multi-file-spec/) for example.
 
  ```js
 // example

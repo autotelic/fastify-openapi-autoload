@@ -1,0 +1,23 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Test Spec
+  license:
+    name: MIT
+paths:
+  /foo:
+    $ref: './paths/foo.yaml'
+  /bar:
+    $ref: './paths/bar.yaml'
+  /baz:
+    $ref: './paths/baz.yaml'
+  /.well-known/jwks.json:
+    $ref: './paths/jwks.yaml'
+components:
+  schemas:
+    $ref: './components/schemas.yaml'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,15 @@
+get:
+  summary: test GET route /foo
+  operationId: getFoo
+  tags:
+    - foo
+  responses:
+    '204':
+      description: test GET route /foo
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              foo:
+                type: string
