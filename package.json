@@ -1,22 +1,22 @@
 {
-  "name": "fastify-openapi-autoload",
+  "name": "@autotelic/fastify-openapi-autoload",
   "version": "0.0.0",
   "description": "Plugin for fastify",
-  "main": "plugin.js",
-  "types": "types/plugin.d.ts",
+  "main": "index.js",
+  "types": "types/index.d.ts",
   "type": "module",
   "files": [
-    "plugin.js",
-    "types/plugin.d.ts"
+    "index.js",
+    "types/index.d.ts"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=18"
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint && npm run unit && npm run test:types",
+    "test": "tap",
     "test:types": "tsd",
-    "unit": "tap run ./test/plugin.test.js"
+    "validate": "npm run lint && npm run test && npm run test:types"
   },
   "repository": {
     "type": "git",
@@ -30,11 +30,13 @@
   },
   "homepage": "https://github.com/autotelic/fastify-openapi-autoload#readme",
   "dependencies": {
+    "@fastify/autoload": "^5.8.0",
+    "fastify-openapi-glue": "4.4.2",
     "fastify-plugin": "^4.5.1"
   },
   "devDependencies": {
     "@autotelic/eslint-config-js": "^0.2.1",
-    "@autotelic/fastify-injector": "^0.2.0",
+    "@autotelic/fastify-injector": "^0.3.0",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
     "eslint": "^8.56.0",
@@ -43,10 +45,6 @@
     "tap": "^18.6.1",
     "tsd": "^0.30.3",
     "typescript": "^5.3.3"
-  },
-  "peerDependencies": {
-    "@fastify/autoload": "^5.8.0",
-    "fastify-openapi-glue": "4.4.2"
   },
   "tsd": {
     "directory": "types"

@@ -1,6 +1,6 @@
 {
   "name": "fastify-openapi-autoload-example",
-  "description": "An example to configure fastify-openapi-autoload",
+  "description": "An example to configure @autotelic/fastify-openapi-autoload",
   "main": "index.js",
   "type": "module",
   "scripts": {
