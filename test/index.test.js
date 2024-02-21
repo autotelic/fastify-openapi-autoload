@@ -77,7 +77,8 @@ test('should use default operation resolvers', async ({ ok, teardown }) => {
   ok(fastify.postBaz)
 })
 
-test('should use a custom operation resolver if provided', async ({ equal }) => {
+test('should use a custom operation resolver if provided', async ({ equal, teardown }) => {
+  teardown(async () => fastify.close())
   const fastify = buildApp({
     operationResolver: (operationId) => {
       if (operationId === 'getFoo') {
@@ -99,7 +100,8 @@ test('should use a custom operation resolver if provided', async ({ equal }) => 
   equal(response.body, 'this is a test')
 })
 
-test('should use a custom operation resolver factory if provided', async ({ equal }) => {
+test('should use a custom operation resolver factory if provided', async ({ equal, teardown }) => {
+  teardown(async () => fastify.close())
   const fastify = buildApp({
     makeOperationResolver: (fastify) => (operationId) => {
       if (operationId === 'getFoo') {
@@ -128,4 +130,33 @@ test('should use a custom operation resolver factory if provided', async ({ equa
 
   equal(barResponse.statusCode, 200)
   equal(barResponse.body, 'bar')
+})
+
+test('should use a custom security handlers factory if provided', async ({ equal, same, teardown }) => {
+  teardown(async () => fastify.close())
+  const fastify = buildApp({
+    makeSecurityHandlers: (fastify) => {
+      fastify.decorateRequest('authenticate', async () => 123)
+      return {
+        async bearerAuth (request, reply, params) {
+          try {
+            const userId = await request.authenticate(request)
+            if (userId == null) throw new Error('no user id')
+          } catch (e) {
+            throw new Error(e)
+          }
+        }
+      }
+    }
+  })
+
+  await fastify.ready()
+
+  const fooResponse = await fastify.inject({
+    method: 'GET',
+    url: '/foo'
+  })
+
+  equal(fooResponse.statusCode, 200)
+  same(fooResponse.json(), { userId: 123 })
 })

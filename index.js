@@ -5,7 +5,7 @@ import openapiGlue from 'fastify-openapi-glue'
 import fastifyPlugin from 'fastify-plugin'
 
 async function openapiAutoload (fastify, options = {}) {
-  const { handlersDir, openapiOpts = {}, makeOperationResolver } = options
+  const { handlersDir, openapiOpts = {}, makeSecurityHandlers, makeOperationResolver } = options
   const { specification, operationResolver = null } = openapiOpts
 
   // Validate handlers directory
@@ -19,7 +19,7 @@ async function openapiAutoload (fastify, options = {}) {
   }
 
   try {
-    // Register fastifyAutoload for handlers
+    // Register handlers with fastifyAutoload
     fastify.register(fastifyAutoload, {
       dir: handlersDir,
       maxDepth: 1,
@@ -30,6 +30,11 @@ async function openapiAutoload (fastify, options = {}) {
     const openapiGlueOpts = {
       operationResolver: operationResolver || defaultResolverFactory(fastify),
       ...openapiOpts
+    }
+
+    // Factory/creator functions for security handlers & operation resolver
+    if (makeSecurityHandlers) {
+      openapiGlueOpts.securityHandlers = makeSecurityHandlers(fastify)
     }
 
     if (makeOperationResolver) {

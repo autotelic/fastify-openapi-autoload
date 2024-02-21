@@ -1,0 +1,74 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Test Spec
+  license:
+    name: MIT
+
+paths:
+  /foo:
+    get:
+      summary: test GET route /foo
+      operationId: getFoo
+      security:
+        - bearerAuth: []
+      tags:
+        - foo
+      responses:
+        '204':
+          description: test GET route /foo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  foo:
+                    type: string
+
+  /.well-known/jwks.json:
+    get:
+      summary: JSON Web Key Set
+      operationId: getJwks
+      tags:
+        - jwks
+      responses:
+        '200':
+          description: An array of JSON Web Key (JWK) objects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JWKS"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    JWKS:
+      title: JSON Web Key Set
+      type: object
+      properties:
+        keys:
+          description: This is just RSA for now.
+          type: array
+          items:
+            type: object
+            properties:
+              kty:
+                type: string
+              'n':
+                type: string
+              'e':
+                type: string
+              kid:
+                type: string
+              use:
+                type: string
+              alg:
+                type: string
+            required:
+            - kty
+      required:
+      - keys
