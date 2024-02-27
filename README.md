@@ -1,6 +1,6 @@
-# Fastify OpenAPI Autoload Documentation
+# Fastify OpenAPI Autoload
 
-The `fastify-openapi-autoload` plugin is a tool for building API servers with Fastify, leveraging OpenAPI specifications. It integrates [`fastify-openapi-glue`](https://github.com/seriousme/fastify-openapi-glue) for handling OpenAPI specs and [`@fastify/autoload`](https://github.com/fastify/fastify-autoload) for auto-loading route handlers, streamlining the API setup process.
+The `fastify-openapi-autoload` plugin is a tool for building API servers with Fastify, leveraging OpenAPI specifications. It integrates [`fastify-openapi-glue`](https://github.com/seriousme/fastify-openapi-glue) for handling OpenAPI specs and [`@fastify/autoload`](https://github.com/fastify/fastify-autoload) for auto-loading route handlers.
 
 ## Features
 

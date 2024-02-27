@@ -35,7 +35,17 @@ http GET :3000/foo
     mkcert "autotelic.localhost"
     ```
 
-4. Ensure the certificate filenames match those in `./example/jwt/index.js`.
+4. Ensure the certificate filenames match those in `./example/jwt/index.js`:
+
+    ```js
+    export const options = {
+      https: {
+        key: readFileSync(join('local-certs', 'autotelic.localhost-key.pem')),
+        cert: readFileSync(join('local-certs', 'autotelic.localhost.pem'))
+      },
+      maxParamLength: 500
+    }
+    ```
 
 ### Starting the Example Server
 
@@ -47,7 +57,7 @@ cd ./example/jwt
 npm i && npm start
 ```
 
-Once the server is running, a request using HTTPie will print to the console. You can copy and use to test a protected route:
+Once the server is running, a request using HTTPie will print to the console. You can copy and use this to test a protected route:
 
 ```sh
 http https://autotelic.localhost:3000/foo 'Authorization:Bearer <JWT_TOKEN>'

@@ -30,7 +30,7 @@ export default async function app (fastify, opts) {
   // register openapiAutoload:
   fastify.register(openapiAutoload, {
     handlersDir: join(fixturesDir, 'handlers'),
-    openapiOpts: { specification: join(fixturesDir, 'spec', 'test-spec.yaml') },
+    openapiOpts: { specification: join(fixturesDir, 'spec', 'openapi.yaml') },
     makeSecurityHandlers
   })
 }
