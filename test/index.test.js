@@ -20,7 +20,8 @@ function buildApp ({
     handlersDir: join(fixturesDir, 'handlers'),
     openapiOpts: {
       specification: join(fixturesDir, 'test-spec.yaml')
-    }
+    },
+    foo: 'bar'
   }
 
   if (operationResolver) {
@@ -103,10 +104,11 @@ test('should use a custom operation resolver if provided', async ({ equal, teard
 test('should use a custom operation resolver factory if provided', async ({ equal, teardown }) => {
   teardown(async () => fastify.close())
   const fastify = buildApp({
-    makeOperationResolver: (fastify) => (operationId) => {
+    makeOperationResolver: (fastify, options) => (operationId) => {
       if (operationId === 'getFoo') {
+        const { foo } = options
         return async (_req, reply) => {
-          reply.code(200).send('this is a test')
+          reply.code(200).send(`this is a test ${foo}`)
         }
       }
       return fastify[operationId]
@@ -121,7 +123,7 @@ test('should use a custom operation resolver factory if provided', async ({ equa
   })
 
   equal(fooResponse.statusCode, 200)
-  equal(fooResponse.body, 'this is a test')
+  equal(fooResponse.body, 'this is a test bar')
 
   const barResponse = await fastify.inject({
     method: 'GET',
@@ -135,8 +137,9 @@ test('should use a custom operation resolver factory if provided', async ({ equa
 test('should use a custom security handlers factory if provided', async ({ equal, same, teardown }) => {
   teardown(async () => fastify.close())
   const fastify = buildApp({
-    makeSecurityHandlers: (fastify) => {
-      fastify.decorateRequest('authenticate', async () => 123)
+    makeSecurityHandlers: (fastify, options) => {
+      const { foo } = options
+      fastify.decorateRequest('authenticate', async () => `${foo}123`)
       return {
         async bearerAuth (request, reply, params) {
           try {
@@ -158,5 +161,5 @@ test('should use a custom security handlers factory if provided', async ({ equal
   })
 
   equal(fooResponse.statusCode, 200)
-  same(fooResponse.json(), { userId: 123 })
+  same(fooResponse.json(), { userId: 'bar123' })
 })
