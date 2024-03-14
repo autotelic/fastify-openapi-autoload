@@ -26,7 +26,8 @@ async function openapiAutoload (fastify, options = {}) {
       dir: handlersDir,
       maxDepth: 1,
       dirNameRoutePrefix: false,
-      encapsulate: false
+      encapsulate: false,
+      options
     })
 
     const openapiGlueOpts = {
@@ -36,11 +37,11 @@ async function openapiAutoload (fastify, options = {}) {
 
     // Factory/creator functions for security handlers & operation resolver
     if (makeSecurityHandlers) {
-      openapiGlueOpts.securityHandlers = makeSecurityHandlers(fastify)
+      openapiGlueOpts.securityHandlers = makeSecurityHandlers(fastify, options)
     }
 
     if (makeOperationResolver) {
-      openapiGlueOpts.operationResolver = makeOperationResolver(fastify)
+      openapiGlueOpts.operationResolver = makeOperationResolver(fastify, options)
     }
 
     // Resolve multi-file OpenAPI specification

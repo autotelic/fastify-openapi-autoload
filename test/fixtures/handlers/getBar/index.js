@@ -1,6 +1,6 @@
-export default async (fastify, { operationId }) => {
+export default async (fastify, { operationId, foo }) => {
   fastify.decorate(operationId, async (_req, reply) => {
-    reply.code(200).send('bar')
+    reply.code(200).send(foo)
   })
 }
 
