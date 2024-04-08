@@ -16,10 +16,7 @@ function buildApp ({
 
   fastify.register(openapiAutoload, {
     handlersDir: join(fixturesDir, 'handlers'),
-    openapiOpts: {
-      specification,
-      resolveMultiSpec: true
-    }
+    openapiOpts: { specification }
   })
 
   return fastify
