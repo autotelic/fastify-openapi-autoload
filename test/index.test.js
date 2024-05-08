@@ -50,6 +50,66 @@ test('plugin should exist', async ({ ok, teardown }) => {
   ok(fastify.hasPlugin('fastify-openapi-glue'))
 })
 
+test('spec should be attached to fastify instance', async ({ same, teardown }) => {
+  teardown(async () => fastify.close())
+
+  const fastify = buildApp()
+  await fastify.ready()
+
+  same(fastify.openapiSpec, {
+    openapi: '3.1.0',
+    info: { version: '1.0.0', title: 'Test Spec', license: { name: 'MIT' } },
+    paths: {
+      '/foo': {
+        get: {
+          summary: 'test GET route /foo',
+          operationId: 'getFoo',
+          tags: ['foo'],
+          responses: {
+            204: {
+              description: 'test GET route /foo',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: { foo: { type: 'string' } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/bar': {
+        get: {
+          summary: 'test GET route /bar',
+          operationId: 'getBar',
+          tags: ['bar'],
+          responses: {
+            204: {
+              description: 'test GET route /bar',
+              content: { 'application/json': { schema: { type: 'string' } } }
+            }
+          }
+        }
+      },
+      '/baz': {
+        post: {
+          summary: 'test POST route /baz',
+          operationId: 'postBaz',
+          tags: ['baz'],
+          responses: {
+            204: {
+              description: 'test POST route /baz',
+              content: { 'application/json': { schema: { type: 'string' } } }
+            }
+          }
+        }
+      }
+    }
+  })
+})
+
 test('should register routes', async ({ equal, teardown }) => {
   teardown(async () => fastify.close())
 
