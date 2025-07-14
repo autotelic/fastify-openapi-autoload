@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/autotelic/fastify-openapi-autoload#readme",
   "dependencies": {
-    "@fastify/autoload": "^5.8.0",
+    "@fastify/autoload": "^5.9.0",
     "fastify-openapi-glue": "^4.4.3",
     "fastify-plugin": "^4.5.1",
     "json-refs": "^3.0.15",
