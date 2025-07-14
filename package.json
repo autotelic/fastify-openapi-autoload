@@ -40,12 +40,15 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@autotelic/eslint-config-js": "^0.4.0",
     "@autotelic/fastify-injector": "^0.3.0",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "eslint": "^8.56.0",
+    "eslint-config-standard": "^17.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.6.0",
     "fast-jwt": "^4.0.0",
     "fastify": "^4.25.2",
     "jose": "^5.2.0",
