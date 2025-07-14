@@ -59,6 +59,8 @@ async function openapiAutoload (fastify, options = {}) {
       })
       openapiGlueOpts.specification = results.resolved
     }
+    // add resolved spec to fastify instance
+    fastify.openapiSpec = openapiGlueOpts.specification
 
     // Register openapiGlue for OpenAPI integration
     fastify.register(openapiGlue, openapiGlueOpts)
